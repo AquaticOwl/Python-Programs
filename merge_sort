@@ -1,0 +1,112 @@
+#Merge Sort *Finished*
+import math
+#list = [10] For early testing
+
+#A function to sort any list of real numbers into numerical order
+def merge_sort(list):
+    #Works for lists of length 1 or 0
+    if(len(list) <= 1):
+        return list
+    #Declares variables in case the list length is not odd
+    odd = False
+    final_element = []
+    if(len(list) % 2 == 1):
+       odd = True
+    list_of_divisions = []
+    #index of the list that needs to be ordered
+    list_index = 0
+    #index of the list of 2 or less element lists
+    lod_index = 0
+    
+    #Creates a list of 2 or less element lists (list_of_divisions)
+    for e in list:
+        if(list_index % 2 == 0):
+            list_of_divisions.append([e])
+        else:
+            list_of_divisions[lod_index].append(e)
+            lod_index += 1
+        list_index += 1
+    for e in list_of_divisions:
+        if(len(e) > 1):
+            temp = e[1]
+            if(e[0] > e[1]):
+                e[1] = e[0]
+                e[0] = temp
+    
+    #Takes out and stores the final element if there is an odd number of elements in the list
+    if(odd):
+       final_element = list_of_divisions[-1]
+       list_of_divisions = list_of_divisions[:-1]
+    next_list_of_divisions = []
+    #Merges the lists
+    length_lod = len(list_of_divisions)
+    merges = math.ceil(math.log(length_lod, 2))
+    for i in range(merges):
+        lod_index = 0
+        for e in list_of_divisions:
+            if(lod_index % 2 == 0):
+               a = list_of_divisions[lod_index]
+               if(lod_index == len(list_of_divisions) - 1):
+                   next_list_of_divisions.append(a)
+            else:
+                b = list_of_divisions[lod_index]
+                j = 0
+                k = 0
+                c = []
+                #repeats for each element in the 2 lists
+                for n in range(len(a) + len(b)):
+                    #compares each element to the next one and creates an ordered list of them (c)
+                    if(j >= len(a) or k >= len(b)):
+                        #Resolves errors for when one variable makes the other variable go out of range when handling the first variable going out of range
+                        if(j >= len(a) and k >= len(b)):
+                            break
+                        if(j >= len(a)):
+                            c.append(b[k])
+                            k += 1
+                        if(j >= len(a) and k >= len(b)):
+                            break
+                        if(k >= len(b)):
+                            c.append(a[j])
+                            j += 1
+                    else:
+                        if(a[j] > b[k]):
+                            c.append(b[k])
+                            k += 1
+                        else:
+                            c.append(a[j])
+                            j += 1
+                #adds the ordered list of a and b to the new list of divisions
+                next_list_of_divisions.append(c)
+            lod_index += 1
+        list_of_divisions = next_list_of_divisions
+        next_list_of_divisions = []
+    if(odd):
+        a = list_of_divisions[0]
+        b = final_element
+        c = []
+        j = 0
+        k = 0
+        for n in range(len(a) + len(b)):
+            #compares each element to the next one and creates an ordered list of them for the final element  (c)
+            if(j >= len(a) or k >= len(b)):
+                if(j >= len(a) and k >= len(b)):
+                    break
+                if(j >= len(a)):
+                    c.append(b[k])
+                    k += 1
+                if(j >= len(a) and k >= len(b)):
+                    break
+                if(k >= len(b)):
+                    c.append(a[j])
+                    j += 1
+            else:
+                if(a[j] > b[k]):
+                    c.append(b[k])
+                    k += 1
+                else:
+                    c.append(a[j])
+                    j += 1
+        list = c
+    else:
+        list = list_of_divisions[0]
+    return list
